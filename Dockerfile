@@ -8,4 +8,6 @@ RUN mkdir -p /opt/modsim/
 ADD modsim/mbmap.py /opt/modsim/
 ADD modsim/mbmap_test_device.xml /opt/modsim/
 ADD modsim/modsim.py /opt/modsim/
-CMD ["python /opt/modsim/modsim.py -m tcp /opt/modsim/mbmap_test_device.xml"]
+EXPOSE 502
+
+

@@ -6,6 +6,8 @@ https://github.com/sunspec/device-webprobe
 
 Much props.
 
+By default the simulator runs on port 502 for tcp/ip
+
 Commands for the interactive shell mode for the modbus simulator:
 add_slave
 has_slave
