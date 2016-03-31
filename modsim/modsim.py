@@ -126,7 +126,7 @@ if __name__ == "__main__":
                       help='Baud Rate [default: 9600]')
     parser.add_option('-m', '--mode',
                       default='rtu',
-                      help='mode: rtu, tcp [default: rtu]')
+                      help='mode: rtu, tcp [default: tcp]')
     parser.add_option('-p', '--port', type='int',
                       default=502,
                       help='IP port [default: 502]')
