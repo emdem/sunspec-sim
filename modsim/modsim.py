@@ -125,7 +125,7 @@ if __name__ == "__main__":
                       default=9600,
                       help='Baud Rate [default: 9600]')
     parser.add_option('-m', '--mode',
-                      default='rtu',
+                      default='tcp',
                       help='mode: rtu, tcp [default: tcp]')
     parser.add_option('-p', '--port', type='int',
                       default=502,
@@ -142,6 +142,8 @@ if __name__ == "__main__":
     if len(args) != 1:
         print parser.print_help()
         sys.exit(1)
+
+    print 'asdf'
 
     modbus_map = mbmap.ModbusMap(options.id)
     try:
