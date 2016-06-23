@@ -4,7 +4,7 @@ import sys
 import struct
 import socket
 import serial
-import modbus_tk
+import modbus_tk.utils
 import modbus_tk.modbus_tcp as modbus_tcp
 import modbus_tk.modbus_rtu as modbus_rtu
 from modbus_tk.simulator import *
@@ -59,7 +59,7 @@ class ModSimRtuServer(modbus_rtu.RtuServer):
         modbus_tk.modbus.Server.__init__(self, databank if databank else ModSimDatabank())
         self._serial = serial
         LOGGER.info("RtuServer alt %s is %s" % (self._serial.portstr, "opened" if self._serial.isOpen() else "closed"))
-        self._t0 = modbus_tk.modbus.utils.calculate_rtu_inter_char(self._serial.baudrate)
+        self._t0 = modbus_tk.utils.calculate_rtu_inter_char(self._serial.baudrate)
         self._serial.interCharTimeout = 1.5 * self._t0
         self._serial.timeout = 10 * self._t0
         # self._serial.interCharTimeout = .5
@@ -107,7 +107,7 @@ class ModSim(Simulator):
             # timeout is too fast for 19200
             self.server._serial.timeout = self.server._serial.timeout * 1.5
         elif options.mode == 'tcp':
-            Simulator.__init__(self, modbus_tcp.TcpServer(address = '', port = options.port))
+            Simulator.__init__(self, modbus_tcp.TcpServer(address = options.hostname, port = options.port))
         else:
             raise ModSimError('Unknown mode: %s' % (options.mode))
 
@@ -130,6 +130,8 @@ if __name__ == "__main__":
     parser.add_option('-p', '--port', type='int',
                       default=502,
                       help='IP port [default: 502]')
+    parser.add_option('-t', '--hostname', default='127.0.0.1',
+                      help='IP hostname or address')
     parser.add_option('-i', '--id', type='int',
                       default=1,
                       help='slave id [default: 1]')
@@ -143,7 +145,6 @@ if __name__ == "__main__":
         print parser.print_help()
         sys.exit(1)
 
-    print 'asdf'
 
     modbus_map = mbmap.ModbusMap(options.id)
     try:
@@ -169,7 +170,7 @@ if __name__ == "__main__":
             sim.rtu.baudrate, sim.rtu.parity, str(options.id), str(modbus_map.base_addr))
     elif sim.mode == 'tcp':
         print 'Initialized modbus %s simulator: addr = %s  port = %s  slave id = %s  base address = %s' % (options.mode,
-            socket.gethostbyname(socket.gethostname()), options.port, str(options.id), str(modbus_map.base_addr))
+            options.hostname, options.port, str(options.id), str(modbus_map.base_addr))
     else:
         print 'Initialized modbus simulator to unknown mode: %s' % (sim.mode)
     
